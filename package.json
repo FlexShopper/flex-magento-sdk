@@ -1,0 +1,19 @@
+{
+  "name": "flex-magento-sdk",
+  "version": "1.0.0",
+  "description": "SDK for Magento API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	 "build": "npx tsc"
+  },
+  "author": "Markel Spellman",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.2",
+    "typescript": "^4.8.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9"
+  }
+}

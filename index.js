@@ -13,7 +13,7 @@ exports.getPageFromMagento = void 0;
 const Axios = require("axios");
 const pages = [
     {
-        name: 'privacyPolicy',
+        name: 'privacy-policy',
         locales: [
             {
                 language: 'en',
@@ -23,22 +23,26 @@ const pages = [
     }
 ];
 function lookupPageId(pageName, lang) {
-    console.log('REQUEST DETAILS: ', { pageName, lang });
     const page = pages.find(page => {
         return page.name === pageName;
     });
-    console.log(page);
-    const locale = page === null || page === void 0 ? void 0 : page.locales.find(l => {
-        return l.language === lang;
+    const translatedPage = page === null || page === void 0 ? void 0 : page.locales.find(locale => {
+        return locale.language === lang;
     });
-    console.log(locale);
-    return locale === null || locale === void 0 ? void 0 : locale.pageId;
+    if (translatedPage) {
+        return translatedPage;
+    }
+    else {
+        return undefined;
+    }
 }
 function getPageFromMagento(pageName, lang) {
     return __awaiter(this, void 0, void 0, function* () {
-        const pageId = lookupPageId(pageName, lang);
-        const result = yield Axios.get('https://mcstaging.eboohome.com/rest/all/V1' + `/cmsPage/${pageId}`);
-        return result;
+        const page = lookupPageId(pageName, lang);
+        if (page) {
+            const response = yield Axios.get('https://mcstaging.eboohome.com/rest/all/V1' + `/cmsPage/${page.pageId}`);
+            return response;
+        }
     });
 }
 exports.getPageFromMagento = getPageFromMagento;

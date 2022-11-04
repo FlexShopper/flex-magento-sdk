@@ -1,18 +1,18 @@
 const Axios = require("axios");
 
+type TranslatedPage = {
+	language: string,
+	pageId: string
+}
+
 type Page = {
 	name: string,
-	locales: [
-		{
-			language: string,
-			pageId: string
-		}
-	]
+	locales: [TranslatedPage]
 }
 
 const pages: [Page] = [
 	{
-		name: 'privacyPolicy',
+		name: 'privacy-policy',
 		locales: [
 			{
 				language: 'en',
@@ -22,21 +22,27 @@ const pages: [Page] = [
 	}
 ]
 
-function lookupPageId(pageName: string, lang: string) {
-	console.log('REQUEST DETAILS: ', {pageName, lang})
+function lookupPageId(pageName: string, lang: string): TranslatedPage | undefined {
 	const page = pages.find(page => {
 		return page.name === pageName
 	})
 
-	const locale = page?.locales.find(l => {
-		return l.language === lang
+	const translatedPage = page?.locales.find(locale => {
+		return locale.language === lang
 	})
-	
-	return locale?.pageId
+
+	if (translatedPage) {
+		return translatedPage
+	} else {
+		return undefined
+	}
 }
 
 export async function getPageFromMagento(pageName: string, lang: string) {
-	const pageId = lookupPageId(pageName, lang)
-	const result = await Axios.get('https://mcstaging.eboohome.com/rest/all/V1' + `/cmsPage/${pageId}`)
-	return result
+	const page = lookupPageId(pageName, lang)
+
+	if (page) {
+		const response = await Axios.get('https://mcstaging.eboohome.com/rest/all/V1' + `/cmsPage/${page.pageId}`)
+		return response
+	}
 }

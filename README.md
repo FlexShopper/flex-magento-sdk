@@ -12,10 +12,10 @@ npm install flex-magento-sdk
 ### 1. Setting up the Retry Client (You must do this before making any requests)
 ```
 // Simple Setup
+// If no custom delay is specified an exponential delay is added by default
 FlexMagento.setupRetryClient({ retries: 3 })
 
 // Custom Delay Setup
-// If no delay is specified an exponential delay is added by default
 FlexMagento.setupRetryClient({ retries: 3, delay: (retryCount) => {
   		return retryCount * 1000;
 	}

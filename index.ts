@@ -1,50 +1,22 @@
-const Axios = require("axios");
-import axiosRetry from 'axios-retry';
+import { setupAxiosRetryClient } from "./lib/utils/client.js";
 
-type TranslatedPageMeta = {
-	language: string,
-	pageId: string
+type RetryConfig = {
+	retries: number,
+	delay?: Function
 }
 
-type PageMeta = {
-	name: string,
-	locales: [TranslatedPageMeta]
+let client: any;
+export function setupRetryClient(config: RetryConfig) {
+  client = setupAxiosRetryClient(config.retries, config.delay);
 }
 
-const pages: [PageMeta] = [
-	{
-		name: 'privacy-policy',
-		locales: [
-			{
-				language: 'en',
-				pageId: '80'
-			}
-		]
-	}
-]
-
-function lookupPageId(pageName: string, lang: string): TranslatedPageMeta | undefined {
-	const page = pages.find(page => {
-		return page.name === pageName
-	})
-
-	const translatedPage = page?.locales.find(locale => {
-		return locale.language === lang
-	})
-
-	if (translatedPage) {
-		return translatedPage
-	} else {
-		return undefined
-	}
-}
-
-export async function getPageFromMagento(pageName: string, lang: string) {
-	const pageMeta = lookupPageId(pageName, lang)
-
-	if (pageMeta) {
-		axiosRetry(Axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
-		const response = await Axios.get(process.env.APP_DESIGNATION + `/cmsPage/${pageMeta.pageId}`)
-		return response
-	}
+export async function getPageFromMagento(pageId: string) {
+  if (client) {
+    const response = await client.get(
+      process.env.MAGENTO_URL + `/cmsPage/${pageId}`
+    );
+    return response;
+  } else {
+	return { error: { message: 'You must setup the retry client before requesting pages.'}}
+  }
 }

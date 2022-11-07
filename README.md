@@ -10,13 +10,15 @@ npm install flex-magento-sdk
 ```
 
 ## **Usage**
+
+### Getting a Page From Magento 
 ```
 import * as React from 'react';
 import * as FlexMagento from 'flex-magento-sdk';
 
 const [html, setHtml] = React.useState('');
 
-FlexMagento.getPageFromMagento('privacy-policy', 'en').then((res: any) => {
+FlexMagento.getPageFromMagento(FlexMagento.AVAILABLE_PAGES.PRIVACY_POLICY, 'en').then((res: any) => {
 	setHtml(res.data.content);
 });
 ```

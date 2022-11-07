@@ -8,44 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPageFromMagento = void 0;
-const Axios = require("axios");
-const axios_retry_1 = __importDefault(require("axios-retry"));
-const pages = [
-    {
-        name: 'privacy-policy',
-        locales: [
-            {
-                language: 'en',
-                pageId: '80'
-            }
-        ]
-    }
-];
-function lookupPageId(pageName, lang) {
-    const page = pages.find(page => {
-        return page.name === pageName;
-    });
-    const translatedPage = page === null || page === void 0 ? void 0 : page.locales.find(locale => {
-        return locale.language === lang;
-    });
-    if (translatedPage) {
-        return translatedPage;
-    }
-    else {
-        return undefined;
-    }
+exports.getPageFromMagento = exports.setupRetryClient = void 0;
+const client_js_1 = require("./lib/utils/client.js");
+let client;
+function setupRetryClient(config) {
+    client = (0, client_js_1.setupAxiosRetryClient)(config.retries, config.delay);
 }
-function getPageFromMagento(pageName, lang) {
+exports.setupRetryClient = setupRetryClient;
+function getPageFromMagento(pageId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const pageMeta = lookupPageId(pageName, lang);
-        if (pageMeta) {
-            (0, axios_retry_1.default)(Axios, { retries: 3, retryDelay: axios_retry_1.default.exponentialDelay });
-            const response = yield Axios.get(process.env.APP_DESIGNATION + `/cmsPage/${pageMeta.pageId}`);
+        if (client) {
+            const response = yield client.get(process.env.MAGENTO_URL + `/cmsPage/${pageId}`);
             return response;
         }
     });

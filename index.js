@@ -45,7 +45,7 @@ function getPageFromMagento(pageName, lang) {
         const pageMeta = lookupPageId(pageName, lang);
         if (pageMeta) {
             (0, axios_retry_1.default)(Axios, { retries: 3, retryDelay: axios_retry_1.default.exponentialDelay });
-            const response = yield Axios.get(process.env.MAGENTO_URL + `/cmsPage/${pageMeta.pageId}`);
+            const response = yield Axios.get(process.env.APP_DESIGNATION + `/cmsPage/${pageMeta.pageId}`);
             return response;
         }
     });

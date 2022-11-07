@@ -44,7 +44,7 @@ export async function getPageFromMagento(pageName: string, lang: string) {
 
 	if (pageMeta) {
 		axiosRetry(Axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
-		const response = await Axios.get(process.env.MAGENTO_URL + `/cmsPage/${pageMeta.pageId}`)
+		const response = await Axios.get(process.env.APP_DESIGNATION + `/cmsPage/${pageMeta.pageId}`)
 		return response
 	}
 }

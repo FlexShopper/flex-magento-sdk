@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPageFromMagento = void 0;
 const Axios = require("axios");
+const axios_retry_1 = __importDefault(require("axios-retry"));
 const pages = [
     {
         name: 'privacy-policy',
@@ -38,9 +42,10 @@ function lookupPageId(pageName, lang) {
 }
 function getPageFromMagento(pageName, lang) {
     return __awaiter(this, void 0, void 0, function* () {
-        const page = lookupPageId(pageName, lang);
-        if (page) {
-            const response = yield Axios.get('https://mcstaging.eboohome.com/rest/all/V1' + `/cmsPage/${page.pageId}`);
+        const pageMeta = lookupPageId(pageName, lang);
+        if (pageMeta) {
+            (0, axios_retry_1.default)(Axios, { retries: 3, retryDelay: axios_retry_1.default.exponentialDelay });
+            const response = yield Axios.get(process.env.MAGENTO_URL + `/cmsPage/${pageMeta.pageId}`);
             return response;
         }
     });

@@ -1,16 +1,17 @@
 const Axios = require("axios");
+import axiosRetry from 'axios-retry';
 
-type TranslatedPage = {
+type TranslatedPageMeta = {
 	language: string,
 	pageId: string
 }
 
-type Page = {
+type PageMeta = {
 	name: string,
-	locales: [TranslatedPage]
+	locales: [TranslatedPageMeta]
 }
 
-const pages: [Page] = [
+const pages: [PageMeta] = [
 	{
 		name: 'privacy-policy',
 		locales: [
@@ -22,7 +23,7 @@ const pages: [Page] = [
 	}
 ]
 
-function lookupPageId(pageName: string, lang: string): TranslatedPage | undefined {
+function lookupPageId(pageName: string, lang: string): TranslatedPageMeta | undefined {
 	const page = pages.find(page => {
 		return page.name === pageName
 	})
@@ -39,10 +40,11 @@ function lookupPageId(pageName: string, lang: string): TranslatedPage | undefine
 }
 
 export async function getPageFromMagento(pageName: string, lang: string) {
-	const page = lookupPageId(pageName, lang)
+	const pageMeta = lookupPageId(pageName, lang)
 
-	if (page) {
-		const response = await Axios.get('https://mcstaging.eboohome.com/rest/all/V1' + `/cmsPage/${page.pageId}`)
+	if (pageMeta) {
+		axiosRetry(Axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
+		const response = await Axios.get(process.env.MAGENTO_URL + `/cmsPage/${pageMeta.pageId}`)
 		return response
 	}
 }

@@ -1,4 +1,4 @@
-import { setupAxiosRetryClient } from "./lib/utils/client.js";
+import { setupAxiosRetryClient } from "./lib/utils/client";
 
 type RetryConfig = {
 	retries: number,

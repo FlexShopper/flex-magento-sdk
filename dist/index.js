@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPageFromMagento = exports.setupRetryClient = void 0;
-const client_js_1 = require("./lib/utils/client.js");
+const client_1 = require("./lib/utils/client");
 let client;
 function setupRetryClient(config) {
-    client = (0, client_js_1.setupAxiosRetryClient)(config.retries, config.delay);
+    client = (0, client_1.setupAxiosRetryClient)(config.retries, config.delay);
 }
 exports.setupRetryClient = setupRetryClient;
 function getPageFromMagento(pageId) {
@@ -21,6 +21,9 @@ function getPageFromMagento(pageId) {
         if (client) {
             const response = yield client.get(process.env.MAGENTO_URL + `/cmsPage/${pageId}`);
             return response;
+        }
+        else {
+            return { error: { message: 'You must setup the retry client before requesting pages.' } };
         }
     });
 }

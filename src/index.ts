@@ -3,7 +3,7 @@ import { setupAxiosRetry } from "./lib/utils/client";
 type RetryConfig = {
   url: string;
   retries: number;
-  retryEnabled: false;
+  retryEnabled: boolean;
   retryDelay?: Function;
 };
 

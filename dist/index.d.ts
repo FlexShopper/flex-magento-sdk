@@ -1,7 +1,7 @@
 declare type RetryConfig = {
     url: string;
     retries: number;
-    retryEnabled: false;
+    retryEnabled: boolean;
     retryDelay?: Function;
 };
 export declare function setupClient(config: RetryConfig): void;

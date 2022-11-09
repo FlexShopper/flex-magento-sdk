@@ -1,22 +1,31 @@
-import { setupAxiosRetryClient } from "./lib/utils/client";
+import { setupAxiosRetry } from "./lib/utils/client";
 
 type RetryConfig = {
-	retries: number,
-	delay?: Function
-}
+  url: string;
+  retries: number;
+  retryEnabled: false;
+  retryDelay?: Function;
+};
 
 let client: any;
-export function setupRetryClient(config: RetryConfig) {
-  client = setupAxiosRetryClient(config.retries, config.delay);
+let url: string;
+
+export function setupClient(config: RetryConfig) {
+  url = config.url;
+  config.retryEnabled
+    ? (client = setupAxiosRetry(config.retries, config.retryDelay))
+    : (client = setupAxiosRetry(0));
 }
 
 export async function getPageFromMagento(pageId: string) {
-  if (client) {
-    const response = await client.get(
-      process.env.MAGENTO_URL + `/cmsPage/${pageId}`
-    );
+  if (client || url) {
+    const response = await client.get(url + `/cmsPage/${pageId}`);
     return response;
   } else {
-	return { error: { message: 'You must setup the retry client before requesting pages.'}}
+    return {
+      error: {
+        message: "You must setup the retry client before requesting pages.",
+      },
+    };
   }
 }

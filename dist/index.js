@@ -9,30 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPageFromMagento = exports.setupClient = void 0;
-const client_1 = require("./lib/utils/client");
-let client;
-let url;
-function setupClient(config) {
-    url = config.url;
-    config.retryEnabled
-        ? (client = (0, client_1.setupAxiosRetry)(config.retries, config.retryDelay))
-        : (client = (0, client_1.setupAxiosRetry)(0));
-}
-exports.setupClient = setupClient;
-function getPageFromMagento(pageId) {
+exports.magento = exports.getContents = void 0;
+const configureMagentoClient_1 = require("./lib/configureMagentoClient");
+const clientFactory_1 = require("./lib/clientFactory");
+function getContents(pageId, config) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (client || url) {
-            const response = yield client.get(url + `/cmsPage/${pageId}`);
-            return response;
-        }
-        else {
-            return {
-                error: {
-                    message: "You must setup the retry client before requesting pages.",
-                },
-            };
-        }
+        debugger;
+        console.log('configuration', config);
+        const client = (0, clientFactory_1.getClient)(config);
+        const response = yield client.get(`/cmsPage/${pageId}`);
+        debugger;
+        return response;
     });
 }
-exports.getPageFromMagento = getPageFromMagento;
+exports.getContents = getContents;
+exports.magento = { configureMagentoClient: configureMagentoClient_1.configureMagentoClient, getContents };
+exports.default = { magento: exports.magento };

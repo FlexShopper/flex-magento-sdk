@@ -5,4 +5,11 @@ export interface Configuration {
     retryDelay?: number;
     fixedDelay?: boolean;
 }
-export declare function getClient(config: Configuration): any;
+export declare class clientFactory {
+    static instance: clientFactory;
+    private client;
+    private constructor();
+    static GetInstance(): clientFactory;
+    getClient(config: Configuration): any;
+    private getClientWithRetry;
+}

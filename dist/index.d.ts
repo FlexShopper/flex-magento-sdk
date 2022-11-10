@@ -1,13 +1,12 @@
-import { configureMagentoClient } from './lib/configureMagentoClient';
-import { Configuration } from './lib/clientFactory';
-export declare function getContents(pageId: string, config: Configuration): Promise<any>;
-export declare const magento: {
-    configureMagentoClient: typeof configureMagentoClient;
+import { configurationProvider } from './lib/configurationProvider';
+import { getContents } from './lib/magentoAPI';
+export declare const modules: {
+    configurationProvider: typeof configurationProvider;
     getContents: typeof getContents;
 };
 declare const _default: {
-    magento: {
-        configureMagentoClient: typeof configureMagentoClient;
+    modules: {
+        configurationProvider: typeof configurationProvider;
         getContents: typeof getContents;
     };
 };

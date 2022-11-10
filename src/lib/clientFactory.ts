@@ -32,13 +32,13 @@ export class clientFactory {
                     'Content-Type': 'application/json',
                 },
             });
-            if (config.doRetry) this.getClientWithRetry(config);
+            if (config.doRetry) this.setClientWithRetry(config);
             return this.client;
         }
         return this.client;
     }
 
-    private getClientWithRetry(config: Configuration) {
+    private setClientWithRetry(config: Configuration) {
         config.fixedDelay
             ? axiosRetry(this.client, {
                   retries: config.retries,

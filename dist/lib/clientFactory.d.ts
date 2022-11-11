@@ -11,5 +11,5 @@ export declare class clientFactory {
     private constructor();
     static GetInstance(): clientFactory;
     getClient(config: Configuration): any;
-    private getClientWithRetry;
+    private setClientWithRetry;
 }

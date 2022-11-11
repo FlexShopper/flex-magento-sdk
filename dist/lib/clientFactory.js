@@ -13,6 +13,7 @@ class clientFactory {
     }
     getClient(config) {
         if (this.client === undefined) {
+            console.log('clientFactory', 'client created');
             this.client = Axios.create({
                 baseURL: config.url,
                 headers: {
@@ -21,12 +22,13 @@ class clientFactory {
                 },
             });
             if (config.doRetry)
-                this.getClientWithRetry(config);
+                this.setClientWithRetry(config);
             return this.client;
         }
+        console.log('clientFactory', 'client already exists');
         return this.client;
     }
-    getClientWithRetry(config) {
+    setClientWithRetry(config) {
         config.fixedDelay
             ? (0, axios_retry_1.default)(this.client, {
                 retries: config.retries,

@@ -25,6 +25,7 @@ export class clientFactory {
 
     public getClient(config: Configuration) {
         if (this.client === undefined) {
+            console.log('clientFactory', 'client created');
             this.client = Axios.create({
                 baseURL: config.url,
                 headers: {
@@ -35,6 +36,7 @@ export class clientFactory {
             if (config.doRetry) this.setClientWithRetry(config);
             return this.client;
         }
+        console.log('clientFactory', 'client already exists');
         return this.client;
     }
 

@@ -1,5 +1,5 @@
 import { configurationProvider } from './lib/configurationProvider';
-import { getContents } from './lib/magentoAPI';
+import { getPageContents, getSectionContents } from './lib/magentoAPI';
 
-export const modules = { configurationProvider, getContents };
+export const modules = { configurationProvider, getPageContents, getSectionContents };
 export default { modules };

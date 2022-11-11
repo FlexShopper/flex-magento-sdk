@@ -1,13 +1,15 @@
 import { configurationProvider } from './lib/configurationProvider';
-import { getContents } from './lib/magentoAPI';
+import { getPageContents, getSectionContents } from './lib/magentoAPI';
 export declare const modules: {
     configurationProvider: typeof configurationProvider;
-    getContents: typeof getContents;
+    getPageContents: typeof getPageContents;
+    getSectionContents: typeof getSectionContents;
 };
 declare const _default: {
     modules: {
         configurationProvider: typeof configurationProvider;
-        getContents: typeof getContents;
+        getPageContents: typeof getPageContents;
+        getSectionContents: typeof getSectionContents;
     };
 };
 export default _default;

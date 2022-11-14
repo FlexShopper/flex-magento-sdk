@@ -1,22 +1,15 @@
-import { Configuration } from './clientFactory';
+import { Configuration } from '../model/configuration';
 
 export class configurationProvider {
-    static instance: configurationProvider;
-    private config: Configuration;
-
-    public static getInstance(): configurationProvider {
-        if (!configurationProvider.instance) {
-            configurationProvider.instance = new configurationProvider();
-        }
-        return configurationProvider.instance;
-    }
-
-    public setConfiguration(config: Configuration) {
-        this.config = config;
-    }
-
-    public getConfiguration() {
-        return this.config;
+    public static getConfiguration() {
+        const config: Configuration = {
+            doRetry: Boolean(process.env.MAGENTO_DORETRY),
+            url: process.env.MAGENTO_API_URL,
+            retries: Number(process.env.MAGENTO_RETRIES),
+            fixedDelay: Boolean(process.env.MAGENTO_FIXED_DELAY),
+            retryDelay: Number(process.env.MAGENTO_RETRY_DELAY),
+        };
+        return config;
     }
 }
 

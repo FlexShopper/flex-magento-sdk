@@ -1,15 +1,9 @@
-export interface Configuration {
-    url: string;
-    doRetry: boolean;
-    retries: number;
-    retryDelay?: number;
-    fixedDelay?: boolean;
-}
+import { Configuration } from '../model/configuration';
 export declare class clientFactory {
     static instance: clientFactory;
-    private client;
+    private clientMap;
     private constructor();
     static GetInstance(): clientFactory;
-    getClient(config: Configuration): any;
+    getClient(config: Configuration, appName: string): any;
     private setClientWithRetry;
 }

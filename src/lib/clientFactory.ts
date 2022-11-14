@@ -1,18 +1,10 @@
 const Axios = require('axios');
 import axiosRetry from 'axios-retry';
-
-export interface Configuration {
-    url: string;
-    doRetry: boolean;
-    retries: number;
-    //retryDelay is in miliseconds
-    retryDelay?: number;
-    fixedDelay?: boolean;
-}
+import { Configuration } from '../model/configuration';
 
 export class clientFactory {
     static instance: clientFactory;
-    private client: any;
+    private clientMap: Map<string, any> = new Map<string, any>();
 
     private constructor() {}
 
@@ -23,32 +15,35 @@ export class clientFactory {
         return clientFactory.instance;
     }
 
-    public getClient(config: Configuration) {
-        if (this.client === undefined) {
-            console.log('clientFactory', 'client created');
-            this.client = Axios.create({
-                baseURL: config.url,
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (config.doRetry) this.setClientWithRetry(config);
-            return this.client;
+    public getClient(config: Configuration, appName: string) {
+        if (this.clientMap.has(appName)) {
+            console.log('clientFactory', `client already exists for ${appName}`);
+            return this.clientMap.get(appName);
         }
-        console.log('clientFactory', 'client already exists');
-        return this.client;
+
+        const client = Axios.create({
+            baseURL: config.url,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+        if (config.doRetry) this.setClientWithRetry(config, client);
+
+        this.clientMap.set(appName, client);
+        console.log('clientFactory', `new client created for ${appName}`);
+        return client;
     }
 
-    private setClientWithRetry(config: Configuration) {
+    private setClientWithRetry(config: Configuration, client: any) {
         config.fixedDelay
-            ? axiosRetry(this.client, {
+            ? axiosRetry(client, {
                   retries: config.retries,
                   retryDelay: (retryCount) => {
                       return config.retryDelay / 1000;
                   },
               })
-            : axiosRetry(this.client, {
+            : axiosRetry(client, {
                   retries: config.retries,
                   retryDelay: axiosRetry.exponentialDelay,
               });

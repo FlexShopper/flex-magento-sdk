@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.clientFactory = void 0;
 const Axios = require('axios');
 const axios_retry_1 = require("axios-retry");
+const configurationProvider_1 = require("./configurationProvider");
 class clientFactory {
     constructor() {
         this.clientMap = new Map();
@@ -13,11 +14,16 @@ class clientFactory {
         }
         return clientFactory.instance;
     }
-    getClient(config, appName) {
+    getClient(appName) {
         if (this.clientMap.has(appName)) {
             console.log('clientFactory', `client already exists for ${appName}`);
             return this.clientMap.get(appName);
         }
+        const config = configurationProvider_1.default.getConfiguration();
+        if (config === undefined)
+            throw new Error('configuration is not provided');
+        if ((config === null || config === void 0 ? void 0 : config.url) === undefined)
+            throw new Error('configuration:url is not provided');
         const client = Axios.create({
             baseURL: config.url,
             headers: {

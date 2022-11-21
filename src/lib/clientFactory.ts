@@ -23,8 +23,8 @@ export class clientFactory {
         }
 
         const config: Configuration = configurationProvider.getConfiguration();
-        if (config === undefined) throw new Error('configuration is not provided');
-        if (config?.url === undefined) throw new Error('configuration:url is not provided');
+        if (config === undefined) throw new Error('magento:configuration is not provided');
+        if (config?.url === undefined) throw new Error('magento:configuration:url is not provided');
 
         const client = Axios.create({
             baseURL: config.url,
